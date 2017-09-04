@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UsefulMethods\UsefulMethods.csproj">
+      <Project>{ceff33a5-b2bb-4b82-a44b-0e59c978bdbf}</Project>
+      <Name>UsefulMethods</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
