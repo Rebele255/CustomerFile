@@ -32,7 +32,8 @@ namespace Kundregister
             printer.PrintWhiteNewLine("[3] Update data about an existing customer");
             printer.PrintWhiteNewLine("[4] Delete customer");
             printer.PrintWhiteNewLine("[5] Display data of all customers");
-            printer.PrintWhiteNewLine("[6] Quit");
+            printer.PrintWhiteNewLine("[6] Search");
+            printer.PrintWhiteNewLine("[7] Quit");
 
             try
             {
@@ -57,6 +58,9 @@ namespace Kundregister
                         DisplayCustomerFile();
                         break;
                     case 6:
+                        SpecificSearch();
+                        break;
+                    case 7:
                         Environment.Exit(0);
                         break;
                     default:
@@ -69,6 +73,40 @@ namespace Kundregister
                 printer.PrintRed("Choose one of the alternatives in the menu!");
             }
 
+        }
+
+        private static void SpecificSearch()
+        {
+            printer.PrintWhite("Search by FirstName, LastName, Email or Phone: ");
+            string choiceCol = Console.ReadLine();
+            printer.PrintWhite("Search word: ");
+            string searchWord = Console.ReadLine();
+
+
+            string connectionString = "Server = (localdb)\\mssqllocaldb; Database = CustomerFiledb";
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                using (SqlCommand command = new SqlCommand($"SELECT  * FROM CustomerFile WHERE {choiceCol} = @SearchWord", con))
+                {
+                    command.Parameters.Add(new SqlParameter("SearchWord", searchWord));
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        PrettyDisplayHeader();
+                        while (reader.Read())
+                        {
+                            Console.Write(reader.GetInt32(0).ToString().PadRight(5));
+                            Console.Write(reader.GetString(1).ToString().PadRight(15));
+                            Console.Write(reader.GetString(2).ToString().PadRight(15));
+                            Console.Write(reader.GetString(3).ToString().PadRight(30));
+                            Console.WriteLine(reader.GetString(4).ToString().PadRight(30));
+                        }
+                    }
+
+
+                }
+            }
         }
 
         private static void PrettyDisplayHeader()
@@ -284,7 +322,7 @@ namespace Kundregister
             }
             else
             {
-                Console.WriteLine("Not a validate name");
+                printer.PrintRed("Not a valid name");
                 return false;
             }
         }
